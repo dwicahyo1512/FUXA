@@ -222,8 +222,7 @@
 
 .svg-sidenav {
     min-width: 160px;
-    max-width: 300px;
-    width: 300px;
+    max-width: 500px;
     background: var(--sidenavBackground);
 }
 

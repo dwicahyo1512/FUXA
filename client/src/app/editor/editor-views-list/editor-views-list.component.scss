@@ -46,6 +46,24 @@
         width: 100%;
     }
 
+    .leftbar-item-wrapper[draggable="true"] {
+        cursor: grab;
+    }
+
+    .leftbar-item-wrapper[draggable="true"]:active {
+        cursor: grabbing;
+    }
+
+    .leftbar-item-drag-over {
+        background-color: rgba(255, 193, 7, 0.2) !important;
+        outline: 2px dashed #FFC107;
+        outline-offset: -2px;
+    }
+
+    .leftbar-item-drag-top {
+        border-top: 2px solid #FFC107;
+    }
+
     .leftbar-item {
         padding: 3px 0px 1px 0px;
         display: flex;
@@ -111,7 +129,7 @@
     }
 
     .item-icon-folder {
-        color: #FFC107;
+        color: #FFD54F;
     }
 
     .item-icon-view {
@@ -124,9 +142,5 @@
 
     .item-icon-maps {
         color: #37BE5F;
-    }
-
-    .item-icon-folder {
-        color: #FFD54F;
     }
 }

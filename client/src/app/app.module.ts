@@ -192,6 +192,7 @@ import { TagPropertyEditWebapiComponent } from './device/tag-property/tag-proper
 import { TagPropertyEditEthernetipComponent } from './device/tag-property/tag-property-edit-ethernetip/tag-property-edit-ethernetip.component';
 import { ViewPropertyComponent } from './editor/view-property/view-property.component';
 import { ResizeDirective } from './_directives/resize.directive';
+import { ResizeHDirective } from './_directives/resize-h.directive';
 import { EditorViewsListComponent } from './editor/editor-views-list/editor-views-list.component';
 import { SvgUtils } from './_helpers/svg-utils';
 import { FlexWidgetPropertyComponent } from './gauges/gauge-property/flex-widget-property/flex-widget-property.component';
@@ -404,6 +405,7 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
         WebcamPlayerComponent,
         WebcamPlayerDialogComponent,
         ResizeDirective,
+        ResizeHDirective,
         EditorViewsListComponent,
         MapsLocationListComponent,
         MapsLocationPropertyComponent,

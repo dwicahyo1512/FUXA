@@ -26,6 +26,9 @@ export class EditorViewsListComponent {
     currentView: View = null;
     searchText = '';
     expandedItems: Set<string> = new Set();
+    draggedView: View = null;
+    dragOverId: string = null;
+    dragOverPos: string = null;
 
     cardViewType = ViewType.cards;
     svgViewType = ViewType.svg;
@@ -192,5 +195,58 @@ export class EditorViewsListComponent {
     onMoveToParent(view: View, parentId: string) {
         view.parentId = parentId || null;
         this.projectService.setView(view, false);
+    }
+
+    onDragStart(event: DragEvent, view: View) {
+        this.draggedView = view;
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', view.id);
+    }
+
+    onDragEnd(event: DragEvent) {
+        this.draggedView = null;
+        this.dragOverId = null;
+        this.dragOverPos = null;
+    }
+
+    onDragOver(event: DragEvent, target: View) {
+        event.preventDefault();
+        if (!this.draggedView || this.draggedView.id === target.id) {
+            return;
+        }
+        if (target.isFolder) {
+            event.dataTransfer.dropEffect = 'move';
+            this.dragOverId = target.id;
+            this.dragOverPos = null;
+        } else {
+            const rect = (event.target as HTMLElement).getBoundingClientRect();
+            const midY = rect.top + rect.height / 2;
+            this.dragOverId = target.id;
+            this.dragOverPos = event.clientY < midY ? 'before' : 'after';
+        }
+    }
+
+    onDragLeave(event: DragEvent, target: View) {
+        if (this.dragOverId === target.id) {
+            this.dragOverId = null;
+            this.dragOverPos = null;
+        }
+    }
+
+    onDrop(event: DragEvent, target: View) {
+        event.preventDefault();
+        this.dragOverId = null;
+        this.dragOverPos = null;
+        if (!this.draggedView || this.draggedView.id === target.id) {
+            return;
+        }
+        if (target.isFolder) {
+            this.draggedView.parentId = target.id;
+            this.projectService.setView(this.draggedView, false);
+            if (!this.isExpanded(target.id)) {
+                this.toggleExpand(target.id);
+            }
+        }
+        this.draggedView = null;
     }
 }

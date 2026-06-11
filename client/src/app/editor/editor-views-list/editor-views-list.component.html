@@ -7,11 +7,21 @@
     <br>
 </div>
 <ng-template #viewItem let-item="item" let-level="level">
-    <div class="leftbar-item-wrapper">
+    <div class="leftbar-item-wrapper"
+         [attr.draggable]="!item.isFolder"
+         (dragstart)="onDragStart($event, item)"
+         (dragend)="onDragEnd($event)">
         <div (click)="item.isFolder ? toggleExpand(item.id) : onSelectView(item, false)"
-             [ngClass]="{'leftbar-item-active': isViewActive(item)}"
+             [ngClass]="{
+                 'leftbar-item-active': isViewActive(item),
+                 'leftbar-item-drag-over': dragOverId === item.id && item.isFolder,
+                 'leftbar-item-drag-top': dragOverId === item.id && dragOverPos === 'before' && !item.isFolder
+             }"
              class="leftbar-item pointer"
-             [style.paddingLeft.px]="12 + level * 18">
+             [style.paddingLeft.px]="12 + level * 18"
+             (dragover)="onDragOver($event, item)"
+             (dragleave)="onDragLeave($event, item)"
+             (drop)="onDrop($event, item)">
             <mat-icon *ngIf="hasChildren(item.id) || item.isFolder"
                       class="leftbar-item-expand"
                       (click)="toggleExpand(item.id); $event.stopPropagation()">
@@ -58,7 +68,7 @@
                 <button mat-menu-item [matMenuTriggerFor]="moveParent">{{'editor.view-move-to' | translate}}</button>
                 <mat-menu #moveParent="matMenu">
                     <button mat-menu-item (click)="onMoveToParent(item, '')">{{'editor.view-move-root' | translate}}</button>
-                    <button mat-menu-item *ngFor="let p of getRootViews()" [disabled]="p.id === item.id" (click)="onMoveToParent(item, p.id)">{{p.name}}</button>
+                    <button mat-menu-item *ngFor="let p of getRootViews()" [disabled]="p.id === item.id || p.isFolder" (click)="onMoveToParent(item, p.id)">{{p.name}}</button>
                 </mat-menu>
             </mat-menu>
         </div>

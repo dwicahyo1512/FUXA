@@ -45,7 +45,8 @@
 <div id="svg_editor_container">
     <mat-drawer-container class="svg-workarea-container">
         <!-- LEFT BAR -->
-        <mat-drawer mode="side" opened="true" class="svg-sidenav leave-header-area" disableClose>
+        <mat-drawer mode="side" opened="true" class="svg-sidenav leave-header-area" disableClose
+                    appResizeH [(width)]="leftbarWidth" [style.width.px]="leftbarWidth" (changeEnd)="saveLeftbarWidth()">
             <mat-accordion multi="true">
                 <mat-expansion-panel class="svg-workarea-leftbar-p" (opened)="panelsState.panelView=true;savePanelState()" (closed)="panelsState.panelView=false;savePanelState()"
                     hideToggle="true" [expanded]="panelsState.panelView">
@@ -55,11 +56,10 @@
                             <mat-icon aria-label="Select" *ngIf="!panelsState.panelView">expand_more</mat-icon>
                             <span>{{'editor.views' | translate}}</span> <!-- PROJECT VIEWS -->
                         </mat-panel-title>
-                         <button mat-icon-button aria-label="Add Folder" matTooltip="{{'editor.view-folder-add' | translate}}" *ngIf="panelsState.panelView" class="leftbar-edit-btn"
-                             (click)="onAddFolder();$event.stopPropagation()">
-                             <mat-icon>create_new_folder</mat-icon>
-                         </button>
-                         <mat-icon aria-label="Add" matTooltip="{{'editor.view-add' | translate}}" *ngIf="panelsState.panelView" class="leftbar-edit-btn"
+                        <mat-icon aria-label="Add Folder" matTooltip="{{'editor.view-folder-add' | translate}}" *ngIf="panelsState.panelView" class="leftbar-edit-btn"
+                            (click)="onAddFolder();$event.stopPropagation()">create_new_folder
+                        </mat-icon>
+                        <mat-icon aria-label="Add" matTooltip="{{'editor.view-add' | translate}}" *ngIf="panelsState.panelView" class="leftbar-edit-btn"
                              (click)="onAddDoc();$event.stopPropagation()">add
                          </mat-icon>
                          <mat-icon aria-label="Import" matTooltip="{{'editor.view-import' | translate}}" *ngIf="panelsState.panelView" class="leftbar-edit-btn"

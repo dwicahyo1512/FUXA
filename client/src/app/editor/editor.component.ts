@@ -103,6 +103,7 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         panelS: true,
         panelWidgets: true,
     };
+    leftbarWidth = 300;
     panelPropertyIdOpenState: boolean;
     panelPropertyTransformOpenState: boolean;
     panelAlignOpenState: boolean;
@@ -1226,6 +1227,10 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         if (ps) {
             this.panelsState = Utils.mergeDeep(this.panelsState, JSON.parse(ps));
         }
+        let lw = localStorage.getItem('@frango.webeditor.leftbarWidth');
+        if (lw) {
+            this.leftbarWidth = Math.max(160, Math.min(500, parseInt(lw)));
+        }
     }
 
     /**
@@ -1238,6 +1243,10 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             localStorage.setItem('@frango.webeditor.panelsState', JSON.stringify(this.panelsState));
         }
+    }
+
+    saveLeftbarWidth() {
+        localStorage.setItem('@frango.webeditor.leftbarWidth', this.leftbarWidth.toString());
     }
     //#endregion
 
