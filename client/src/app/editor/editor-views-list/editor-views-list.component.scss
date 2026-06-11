@@ -1,7 +1,56 @@
 :host {
+    .view-search {
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        position: sticky;
+        top: 0;
+        background: inherit;
+        z-index: 1;
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+        margin-bottom: 4px;
+    }
+
+    .view-search-icon {
+        font-size: 18px;
+        color: rgba(255,255,255,0.5);
+        margin-right: 4px;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+    }
+
+    .view-search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: inherit;
+        font-size: 13px;
+        line-height: 24px;
+        &::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+    }
+
+    .view-search-clear {
+        font-size: 16px;
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        line-height: 20px;
+        height: 20px;
+        width: 20px;
+    }
+
+    .leftbar-item-wrapper {
+        width: 100%;
+    }
+
     .leftbar-item {
         padding: 3px 0px 1px 0px;
-        display: flow-root;
+        display: flex;
+        align-items: center;
+        gap: 2px;
     }
 
     .leftbar-item-active {
@@ -10,26 +59,59 @@
     }
 
     .leftbar-item span {
-        float: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .leftbar-item-expand {
+        font-size: 16px;
+        line-height: 20px;
+        height: 20px;
+        width: 16px;
+        cursor: pointer;
+        color: rgba(255,255,255,0.5);
+        flex-shrink: 0;
+    }
+
+    .leftbar-item-expand-spacer {
+        font-size: 6px;
+        line-height: 20px;
+        height: 20px;
+        width: 16px;
+        color: transparent;
+        flex-shrink: 0;
+        visibility: hidden;
     }
 
     .leftbar-item .leftbar-item-type {
-        float: left;
-        padding-left: 4px;
         font-size: 16px;
         line-height: 20px;
+        height: 20px;
+        width: 18px;
+        flex-shrink: 0;
     }
 
-    .leftbar-item mat-icon {
-        float: right;
+    .leftbar-item mat-icon:last-child {
         font-size: 18px;
+        line-height: 20px;
+        height: 20px;
+        width: 18px;
+        flex-shrink: 0;
+        margin-left: auto;
     }
 
     .view-item-text {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: calc(100% - 54px);
+        flex: 1;
+        min-width: 0;
+        font-size: 13px;
+    }
+
+    .item-icon-folder {
+        color: #FFC107;
     }
 
     .item-icon-view {
@@ -42,5 +124,9 @@
 
     .item-icon-maps {
         color: #37BE5F;
+    }
+
+    .item-icon-folder {
+        color: #FFD54F;
     }
 }

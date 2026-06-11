@@ -1042,6 +1042,27 @@ export class EditorComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
+    onAddFolder() {
+        let nn = 'Folder_';
+        let idx = 1;
+        for (idx = 1; idx < this.hmi.views.length + 2; idx++) {
+            let found = false;
+            for (let i = 0; i < this.hmi.views.length; i++) {
+                if (this.hmi.views[i].name === nn + idx) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) { break; }
+        }
+        let view = this.projectService.getNewView(nn + idx, ViewType.svg);
+        view.profile.width = 0;
+        view.profile.height = 0;
+        view.isFolder = true;
+        this.hmi.views = [...this.hmi.views, view];
+        this.projectService.setView(view, false);
+    }
+
     /**
      * Add View to Project with a default name View_[x]
      */

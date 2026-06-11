@@ -27,6 +27,10 @@ export class View {
     type: ViewType;
     /** Property with events of view like Open or Close */
     property: ViewProperty;
+    /** Parent view id for hierarchy */
+    parentId?: string;
+    /** Is a folder (container for grouping views) */
+    isFolder?: boolean;
 
     constructor(id?: string, type?: ViewType, name?: string) {
         this.id = id;

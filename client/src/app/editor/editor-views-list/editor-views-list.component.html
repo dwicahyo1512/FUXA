@@ -1,39 +1,74 @@
+<div class="view-search">
+    <mat-icon class="view-search-icon">search</mat-icon>
+    <input class="view-search-input" type="text" [(ngModel)]="searchText" placeholder="{{'editor.view-search' | translate}}" />
+    <mat-icon class="view-search-clear" *ngIf="searchText" (click)="searchText = ''">close</mat-icon>
+</div>
 <div *ngIf="views && views.length <= 0">
     <br>
 </div>
-<div *ngFor="let item of getViewsSorted()"
-     (click)="onSelectView(item, false)"
-     [ngClass]="{'leftbar-item-active': isViewActive(item)}"
-     class="leftbar-item pointer">
-    <mat-icon *ngIf="!item.type || item.type === svgViewType"
-              matTooltip="{{'editor.view-svg' | translate}}"
-              class="leftbar-item-type item-icon-view">
-        wysiwyg
-    </mat-icon>
-    <mat-icon *ngIf="item.type === cardViewType"
-              matTooltip="{{'editor.view-cards' | translate}}"
-              class="leftbar-item-type item-icon-cards">
-        grid_view
-    </mat-icon>
-    <mat-icon *ngIf="item.type === mapsViewType"
-              matTooltip="{{'editor.view-maps' | translate}}"
-              class="leftbar-item-type item-icon-maps">
-        map
-    </mat-icon>
-    <span class="view-item-text">
-        {{item.name}}
-    </span>
-    <mat-icon aria-label="More"
-              [matMenuTriggerFor]="menuview">
-        more_vert
-    </mat-icon>
-    <mat-menu #menuview="matMenu"
-              class="leftbar-item-menu">
-        <button mat-menu-item (click)="onDeleteView(item)">{{'editor.view-delete' | translate}}</button>
-        <button mat-menu-item (click)="onRenameView(item)">{{'editor.view-rename' | translate}}</button>
-        <button mat-menu-item (click)="onPropertyView(item)">{{'editor.view-property' | translate}}</button>
-        <button mat-menu-item (click)="onCloneView(item)" *ngIf="item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-clone' | translate}}</button>
-        <button mat-menu-item (click)="onExportView(item)" *ngIf="item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-export' | translate}}</button>
-        <button mat-menu-item (click)="onCleanView(item)" *ngIf="item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-clean' | translate}}</button>
-    </mat-menu>
+<ng-template #viewItem let-item="item" let-level="level">
+    <div class="leftbar-item-wrapper">
+        <div (click)="item.isFolder ? toggleExpand(item.id) : onSelectView(item, false)"
+             [ngClass]="{'leftbar-item-active': isViewActive(item)}"
+             class="leftbar-item pointer"
+             [style.paddingLeft.px]="12 + level * 18">
+            <mat-icon *ngIf="hasChildren(item.id) || item.isFolder"
+                      class="leftbar-item-expand"
+                      (click)="toggleExpand(item.id); $event.stopPropagation()">
+                {{ isExpanded(item.id) ? 'expand_more' : 'chevron_right' }}
+            </mat-icon>
+            <mat-icon *ngIf="!hasChildren(item.id) && !item.isFolder" class="leftbar-item-expand-spacer">fiber_manual_record</mat-icon>
+            <mat-icon *ngIf="item.isFolder"
+                      matTooltip="{{'editor.view-folder' | translate}}"
+                      class="leftbar-item-type item-icon-folder">
+                {{ isExpanded(item.id) ? 'folder_open' : 'folder' }}
+            </mat-icon>
+            <mat-icon *ngIf="!item.isFolder && (!item.type || item.type === svgViewType)"
+                      matTooltip="{{'editor.view-svg' | translate}}"
+                      class="leftbar-item-type item-icon-view">
+                wysiwyg
+            </mat-icon>
+            <mat-icon *ngIf="!item.isFolder && item.type === cardViewType"
+                      matTooltip="{{'editor.view-cards' | translate}}"
+                      class="leftbar-item-type item-icon-cards">
+                grid_view
+            </mat-icon>
+            <mat-icon *ngIf="!item.isFolder && item.type === mapsViewType"
+                      matTooltip="{{'editor.view-maps' | translate}}"
+                      class="leftbar-item-type item-icon-maps">
+                map
+            </mat-icon>
+            <span class="view-item-text">
+                {{item.name}}
+            </span>
+            <mat-icon aria-label="More"
+                      [matMenuTriggerFor]="menuview"
+                      (click)="$event.stopPropagation()">
+                more_vert
+            </mat-icon>
+            <mat-menu #menuview="matMenu"
+                      class="leftbar-item-menu">
+                <button mat-menu-item (click)="onDeleteView(item)">{{'editor.view-delete' | translate}}</button>
+                <button mat-menu-item (click)="onRenameView(item)">{{'editor.view-rename' | translate}}</button>
+                <button mat-menu-item (click)="onPropertyView(item)" *ngIf="!item.isFolder">{{'editor.view-property' | translate}}</button>
+                <button mat-menu-item (click)="onCloneView(item)" *ngIf="!item.isFolder && item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-clone' | translate}}</button>
+                <button mat-menu-item (click)="onExportView(item)" *ngIf="!item.isFolder && item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-export' | translate}}</button>
+                <button mat-menu-item (click)="onCleanView(item)" *ngIf="!item.isFolder && item.type !== cardViewType && item.type !== mapsViewType">{{'editor.view-clean' | translate}}</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item [matMenuTriggerFor]="moveParent">{{'editor.view-move-to' | translate}}</button>
+                <mat-menu #moveParent="matMenu">
+                    <button mat-menu-item (click)="onMoveToParent(item, '')">{{'editor.view-move-root' | translate}}</button>
+                    <button mat-menu-item *ngFor="let p of getRootViews()" [disabled]="p.id === item.id" (click)="onMoveToParent(item, p.id)">{{p.name}}</button>
+                </mat-menu>
+            </mat-menu>
+        </div>
+        <div *ngIf="isExpanded(item.id) || searchText">
+            <ng-container *ngFor="let child of getChildren(item.id)">
+                <ng-container *ngTemplateOutlet="viewItem; context:{item: child, level: level + 1}"></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<div *ngFor="let item of getRootViews()">
+    <ng-container *ngTemplateOutlet="viewItem; context:{item: item, level: 0}"></ng-container>
 </div>

@@ -24,6 +24,8 @@ export class EditorViewsListComponent {
     @Output() cloneView: EventEmitter<View> = new EventEmitter<View>();
 
     currentView: View = null;
+    searchText = '';
+    expandedItems: Set<string> = new Set();
 
     cardViewType = ViewType.cards;
     svgViewType = ViewType.svg;
@@ -42,15 +44,57 @@ export class EditorViewsListComponent {
         this.selected.emit(this.currentView);
     }
 
-    getViewsSorted() {
-        return this.views.sort((a, b) => {
-            if (a.name > b.name) { return 1; }
-            return -1;
-        });
+    getRootViews() {
+        let list = this.views;
+        if (this.searchText) {
+            const q = this.searchText.toLowerCase();
+            const matchingIds = new Set(this.views.filter(v => v.name.toLowerCase().includes(q)).map(v => v.id));
+            this.views.forEach(v => {
+                if (v.parentId && matchingIds.has(v.parentId)) {
+                    matchingIds.add(v.id);
+                }
+            });
+            list = this.views.filter(v => matchingIds.has(v.id) || this.hasChildMatching(v.id, q));
+        }
+        return list.filter(v => !v.parentId).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    getChildren(parentId: string) {
+        let list = this.views;
+        if (this.searchText) {
+            const q = this.searchText.toLowerCase();
+            list = this.views.filter(v => v.parentId === parentId && (v.name.toLowerCase().includes(q) || this.hasChildMatching(v.id, q)));
+        }
+        return list.filter(v => v.parentId === parentId).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    hasChildren(viewId: string) {
+        return this.views.some(v => v.parentId === viewId);
+    }
+
+    private hasChildMatching(parentId: string, query: string): boolean {
+        return this.views.some(v => v.parentId === parentId && (v.name.toLowerCase().includes(query) || this.hasChildMatching(v.id, query)));
+    }
+
+    isExpanded(viewId: string) {
+        return this.expandedItems.has(viewId);
+    }
+
+    toggleExpand(viewId: string) {
+        if (this.expandedItems.has(viewId)) {
+            this.expandedItems.delete(viewId);
+        } else {
+            this.expandedItems.add(viewId);
+        }
+    }
+
+    onSetAsParent(view: View) {
+        view.parentId = '';
+        this.projectService.setView(view, false);
     }
 
     isViewActive(view) {
-        return (this.currentView && this.currentView.name === view.name);
+        return (this.currentView && this.currentView.id === view.id);
     }
 
     onDeleteView(view) {
@@ -64,22 +108,19 @@ export class EditorViewsListComponent {
         dialogRef.afterClosed().subscribe(result => {
             if (result && this.views) {
                 let toselect = null;
-                for (var i = 0; i < this.views.length; i++) {
-                    if (this.views[i].id === view.id) {
-                        this.views.splice(i, 1);
-                        if (i > 0 && i < this.views.length) {
-                            toselect = this.views[i];
-                        }
-                        break;
-                    }
+                const idsToRemove = [view.id];
+                const childrenToRemove = this.views.filter(v => v.parentId === view.id);
+                childrenToRemove.forEach(child => idsToRemove.push(child.id));
+                const viewsToRemove = [view, ...childrenToRemove];
+                this.views = this.views.filter(v => !idsToRemove.includes(v.id));
+                if (this.views.length > 0) {
+                    toselect = this.views[0];
                 }
                 this.currentView = null;
                 if (toselect) {
                     this.onSelectView(toselect);
-                } else if (this.views.length > 0) {
-                    this.onSelectView(this.views[0]);
                 }
-                this.projectService.removeView(view);
+                viewsToRemove.forEach(v => this.projectService.removeView(v));
             }
         });
     }
@@ -146,5 +187,10 @@ export class EditorViewsListComponent {
        if (changed) {
             this.onSelectView(view);
        }
+    }
+
+    onMoveToParent(view: View, parentId: string) {
+        view.parentId = parentId || null;
+        this.projectService.setView(view, false);
     }
 }
