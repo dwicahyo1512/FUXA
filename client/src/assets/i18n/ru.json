@@ -1176,6 +1176,12 @@
     "dlg.app-auth-expiration-1d": "Включено со временем действия токена 1 день.",
     "dlg.app-auth-tooltip": "После включения вы будете иметь аккаунт администратора 'admin/123456'. Не забудьте изменить его",
 
+        "dlg.app-settings-loading-screen": "Loading Screen",
+    "dlg.app-settings-loading-screen-logo": "Loading Logo",
+    "dlg.app-settings-loading-screen-text": "Loading Text",
+    "dlg.app-settings-loading-screen-upload": "Upload Image",
+    "dlg.app-settings-loading-screen-preview": "Preview",
+    "dlg.app-settings-loading-screen-powered": "Powered By Text",
     "dlg.app-settings-daqstore": "Хранилище данных",
     "dlg.app-settings-daqstore-type": "СУБД",
     "dlg.app-settings-daqstore-url": "URL",

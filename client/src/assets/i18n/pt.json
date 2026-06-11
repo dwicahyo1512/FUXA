@@ -637,6 +637,12 @@
 
     "dlg.app-settings-daqstore-questdb-host": "QuestDB Host",
     "dlg.app-settings-daqstore-ingestconn": "Ingestion connection (ILP)",
+    "dlg.app-settings-loading-screen": "Loading Screen",
+    "dlg.app-settings-loading-screen-logo": "Loading Logo",
+    "dlg.app-settings-loading-screen-text": "Loading Text",
+    "dlg.app-settings-loading-screen-upload": "Upload Image",
+    "dlg.app-settings-loading-screen-preview": "Preview",
+    "dlg.app-settings-loading-screen-powered": "Powered By Text",
     "dlg.app-auth-disabled": "Desativado",
     "dlg.app-auth-expiration-15m": "Ativar token com expiração em 15 minutos.",
     "dlg.app-auth-expiration-1h": "Ativar token com expiração em 1 horas.",

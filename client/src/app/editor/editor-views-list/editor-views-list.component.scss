@@ -5,8 +5,8 @@
         padding: 4px 8px;
         position: sticky;
         top: 0;
-        background: inherit;
-        z-index: 1;
+        background-color: var(--toolboxPanelBackground);
+        z-index: 2;
         border-bottom: 1px solid rgba(255,255,255,0.12);
         margin-bottom: 4px;
     }

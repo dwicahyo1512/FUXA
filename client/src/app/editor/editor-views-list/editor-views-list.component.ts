@@ -59,7 +59,11 @@ export class EditorViewsListComponent {
             });
             list = this.views.filter(v => matchingIds.has(v.id) || this.hasChildMatching(v.id, q));
         }
-        return list.filter(v => !v.parentId).sort((a, b) => a.name.localeCompare(b.name));
+        return list.filter(v => !v.parentId).sort((a, b) => {
+            if (a.isFolder && !b.isFolder) return -1;
+            if (!a.isFolder && b.isFolder) return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
 
     getChildren(parentId: string) {
@@ -68,7 +72,11 @@ export class EditorViewsListComponent {
             const q = this.searchText.toLowerCase();
             list = this.views.filter(v => v.parentId === parentId && (v.name.toLowerCase().includes(q) || this.hasChildMatching(v.id, q)));
         }
-        return list.filter(v => v.parentId === parentId).sort((a, b) => a.name.localeCompare(b.name));
+        return list.filter(v => v.parentId === parentId).sort((a, b) => {
+            if (a.isFolder && !b.isFolder) return -1;
+            if (!a.isFolder && b.isFolder) return 1;
+            return a.name.localeCompare(b.name);
+        });
     }
 
     hasChildren(viewId: string) {

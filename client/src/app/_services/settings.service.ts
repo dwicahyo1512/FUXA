@@ -135,6 +135,18 @@ export class SettingsService {
             this.appSettings.swaggerEnabled = settings.swaggerEnabled;
             dirty = true;
         }
+        if (settings.loadingScreenLogo !== this.appSettings.loadingScreenLogo) {
+            this.appSettings.loadingScreenLogo = settings.loadingScreenLogo;
+            dirty = true;
+        }
+        if (settings.loadingScreenText !== this.appSettings.loadingScreenText) {
+            this.appSettings.loadingScreenText = settings.loadingScreenText;
+            dirty = true;
+        }
+        if (settings.loadingScreenPowered !== this.appSettings.loadingScreenPowered) {
+            this.appSettings.loadingScreenPowered = settings.loadingScreenPowered;
+            dirty = true;
+        }
         if (dirty) {
             this.settings$.next(this.appSettings);
         }

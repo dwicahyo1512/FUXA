@@ -1629,6 +1629,12 @@
     "dlg.app-auth-expiration-1d": "已启用，令牌将在1天内到期,",
     "dlg.app-auth-tooltip": "已启用: 你有一个管理员账户 'admin/123456' (请不要忘记修改). 需要重新启动服务器！",
     "dlg.app-settings-client-broadcast": "广播到客户端（前端）所有标签值",
+    "dlg.app-settings-loading-screen": "Loading Screen",
+    "dlg.app-settings-loading-screen-logo": "Loading Logo",
+    "dlg.app-settings-loading-screen-text": "Loading Text",
+    "dlg.app-settings-loading-screen-upload": "Upload Image",
+    "dlg.app-settings-loading-screen-preview": "Preview",
+    "dlg.app-settings-loading-screen-powered": "Powered By Text",
 
     "dlg.app-settings-daqstore": "DAQ存储",
     "dlg.app-settings-daqstore-type": "数据库类型",

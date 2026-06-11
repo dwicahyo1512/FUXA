@@ -199,6 +199,15 @@ try {
         if (!utils.isNullOrUndefined(mysettings.swaggerEnabled)) {
             settings.swaggerEnabled = mysettings.swaggerEnabled;
         }
+        if (!utils.isNullOrUndefined(mysettings.loadingScreenLogo)) {
+            settings.loadingScreenLogo = mysettings.loadingScreenLogo;
+        }
+        if (!utils.isNullOrUndefined(mysettings.loadingScreenText)) {
+            settings.loadingScreenText = mysettings.loadingScreenText;
+        }
+        if (!utils.isNullOrUndefined(mysettings.loadingScreenPowered)) {
+            settings.loadingScreenPowered = mysettings.loadingScreenPowered;
+        }
         if (mysettings.nodeRedEnabled === true && utils.isNullOrUndefined(mysettings.nodeRedAuthMode)) {
             settings.nodeRedAuthMode = 'legacy-open';
         }

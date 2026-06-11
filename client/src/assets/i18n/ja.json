@@ -1662,6 +1662,12 @@
     "dlg.app-auth-expiration-1d": "有効（トークン有効期限：1日）",
     "dlg.app-auth-tooltip": "有効化済み: 管理者アカウント 'admin/123456' が存在します（変更をお忘れなく）。サーバーの再起動が必要です！",
     "dlg.app-settings-client-broadcast": "クライアント（フロントエンド）に全タグ値をブロードキャスト",
+    "dlg.app-settings-loading-screen": "Loading Screen",
+    "dlg.app-settings-loading-screen-logo": "Loading Logo",
+    "dlg.app-settings-loading-screen-text": "Loading Text",
+    "dlg.app-settings-loading-screen-upload": "Upload Image",
+    "dlg.app-settings-loading-screen-preview": "Preview",
+    "dlg.app-settings-loading-screen-powered": "Powered By Text",
 
     "dlg.app-settings-daqstore": "DAQストレージ",
     "dlg.app-settings-daqstore-type": "データベースタイプ",

@@ -125,6 +125,10 @@ module.exports = {
 
     swaggerEnabled: false,
 
+    loadingScreenLogo: '',
+    loadingScreenText: 'FUXA Loading...',
+    loadingScreenPowered: 'powered by <span><b>frango</b>team</span>',
+
     nodeRedEnabled: false,
 
     // Node-RED access mode: "secure" (auth required) or "legacy-open" (no auth)

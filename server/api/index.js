@@ -126,6 +126,17 @@ function init(_server, _runtime) {
             });
 
             /**
+             * GET Loading screen settings (public, no auth)
+             */
+            apiApp.get('/api/loading-screen', function (req, res) {
+                res.json({
+                    loadingScreenLogo: runtime.settings.loadingScreenLogo || '',
+                    loadingScreenText: runtime.settings.loadingScreenText || 'FUXA Loading...',
+                    loadingScreenPowered: runtime.settings.loadingScreenPowered || 'powered by <span><b>frango</b>team</span>'
+                });
+            });
+
+            /**
              * POST Server user settings
              */
             apiApp.post("/api/settings", authMiddleware, function(req, res, next) {
@@ -286,6 +297,15 @@ function mergeUserSettings(settings) {
     }
     if (settings.logs) {
         runtime.settings.logs = settings.logs;
+    }
+    if (!utils.isNullOrUndefined(settings.loadingScreenLogo)) {
+        runtime.settings.loadingScreenLogo = settings.loadingScreenLogo;
+    }
+    if (!utils.isNullOrUndefined(settings.loadingScreenText)) {
+        runtime.settings.loadingScreenText = settings.loadingScreenText;
+    }
+    if (!utils.isNullOrUndefined(settings.loadingScreenPowered)) {
+        runtime.settings.loadingScreenPowered = settings.loadingScreenPowered;
     }
 }
 

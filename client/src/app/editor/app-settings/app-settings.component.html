@@ -100,6 +100,39 @@
                     </div>
                 </div>
             </mat-tab>
+            <mat-tab label="{{'dlg.app-settings-loading-screen' | translate}}">
+                <div class="block mt20 tab-loading-screen">
+                    <div class="my-form-field block">
+                        <span>{{'dlg.app-settings-loading-screen-logo' | translate}}</span>
+                        <div class="loading-logo-row">
+                            <mat-select [(value)]="settings.loadingScreenLogo" style="width: 320px">
+                                <mat-option (click)="settings.loadingScreenLogo = '';"></mat-option>
+                                <mat-option *ngFor="let resource of loadingScreenResources" [value]="resource.path">
+                                    {{ resource.name }}
+                                </mat-option>
+                            </mat-select>
+                            <button mat-icon-button color="primary" (click)="loadingLogoFile.value='';loadingLogoFile.click();" matTooltip="{{'dlg.app-settings-loading-screen-upload' | translate}}">
+                                <mat-icon>upload</mat-icon>
+                            </button>
+                            <input #loadingLogoFile type="file" style="display: none;" (change)="onLoadingLogoUpload($event)" accept="image/png,image/jpeg,image/svg+xml,image/gif" />
+                        </div>
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-loading-screen-text' | translate}}</span>
+                        <input [(ngModel)]="settings.loadingScreenText" placeholder="FUXA Loading..." style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-loading-screen-powered' | translate}}</span>
+                        <input [(ngModel)]="settings.loadingScreenPowered" placeholder="powered by frangoteam" style="width: 320px" type="text">
+                    </div>
+                    <div class="loading-preview mt20" *ngIf="settings.loadingScreenLogo">
+                        <span>{{'dlg.app-settings-loading-screen-preview' | translate}}</span>
+                        <div class="loading-preview-image mt10">
+                            <img [src]="settings.loadingScreenLogo" style="max-width:120px;max-height:120px;">
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
             <mat-tab label="{{'dlg.app-settings-smtp' | translate}}">
                 <div class="block mt20 tab-smtp">
                     <div class="block">

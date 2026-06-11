@@ -41,6 +41,12 @@ export class AppSettings {
     nodeRedAuthMode = 'secure';
     /** Enable Swagger */
     swaggerEnabled = false;
+    /** Loading screen logo (resource path) */
+    loadingScreenLogo = '';
+    /** Loading screen text */
+    loadingScreenText = 'FUXA Loading...';
+    /** Loading screen powered by text (HTML) */
+    loadingScreenPowered = 'powered by <span><b>frango</b>team</span>';
 }
 
 export class EditorSectionMessagesSettings {

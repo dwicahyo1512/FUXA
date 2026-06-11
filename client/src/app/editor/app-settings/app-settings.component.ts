@@ -7,6 +7,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { AlarmsRetentionType, AppSettings, DaqStore, DaqStoreRetentionType, DaqStoreType, MailMessage, SmtpSettings, StoreCredentials, LogsSettings, AlarmsSettings } from '../../_models/settings';
+import { ResourceGroup, ResourceItem, Resources, ResourceType } from '../../_models/resources';
+import { ResourcesService } from '../../_services/resources.service';
+import { MyFileService, TransferResult } from '../../_services/my-file.service';
 import { Utils } from '../../_helpers/utils';
 
 @Component({
@@ -60,11 +63,14 @@ export class AppSettingsComponent implements OnInit {
     alarmsRetationType = AlarmsRetentionType;
     logsRetationType = DaqStoreRetentionType;
     influxDB18 = Utils.getEnumKey(DaqStoreType, DaqStoreType.influxDB18);
+    loadingScreenResources: ResourceItem[] = [];
 
     constructor(private settingsService: SettingsService,
         private diagnoseService: DiagnoseService,
         private translateService: TranslateService,
         private toastr: ToastrService,
+        private resourcesService: ResourcesService,
+        private fileService: MyFileService,
         public dialogRef: MatDialogRef<AppSettingsComponent>) { }
 
     ngOnInit() {
@@ -118,6 +124,22 @@ export class AppSettingsComponent implements OnInit {
             this.settings.swaggerEnabled = false;
         }
         this.originalSwaggerEnabled = this.settings.swaggerEnabled;
+        if (Utils.isNullOrUndefined(this.settings.loadingScreenLogo)) {
+            this.settings.loadingScreenLogo = '';
+        }
+        if (Utils.isNullOrUndefined(this.settings.loadingScreenText)) {
+            this.settings.loadingScreenText = 'FUXA Loading...';
+        }
+        if (Utils.isNullOrUndefined(this.settings.loadingScreenPowered)) {
+            this.settings.loadingScreenPowered = 'powered by <span><b>frango</b>team</span>';
+        }
+        this.resourcesService.getResources(ResourceType.images).subscribe((result: Resources) => {
+            if (result) {
+                result.groups.forEach((group: ResourceGroup) => {
+                    this.loadingScreenResources.push(...group.items);
+                });
+            }
+        });
     }
 
     onNoClick() {
@@ -144,6 +166,22 @@ export class AppSettingsComponent implements OnInit {
 
     onAlarmsClear() {
         this.settingsService.clearAlarms(true);
+    }
+
+    onLoadingLogoUpload(event: any) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+        this.fileService.upload(file, null).subscribe((result: TransferResult) => {
+            if (result.result && result.result.location) {
+                this.settings.loadingScreenLogo = result.result.location;
+            } else {
+                var msg = '';
+                this.translateService.get('msg.file-upload-failed').subscribe((txt: string) => { msg = txt; });
+                this.notifyError(msg);
+            }
+        });
     }
 
     onSmtpTest() {
