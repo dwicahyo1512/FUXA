@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { View } from '../../_models/hmi';
 import { ProjectService } from '../../_services/project.service';
+import { SettingsService } from '../../_services/settings.service';
 import { GaugesManager } from '../../gauges/gauges.component';
 import { ArMarkerScannerMode, ArMarkerScannerService } from './ar-marker-scanner.service';
 import { ArViewService, ArVisibleMarker } from './ar-view.service';
@@ -38,7 +39,12 @@ export class ArViewComponent implements AfterViewInit, OnDestroy {
         public gaugesManager: GaugesManager,
         public projectService: ProjectService,
         private route: ActivatedRoute,
+        private settingsService: SettingsService,
     ) { }
+
+    get arTitle(): string {
+        return this.settingsService.getSettings().arTitle || 'FUXA AR';
+    }
 
     get visibleMarkers(): ArVisibleMarker[] {
         return this.arViewService.visibleMarkers;

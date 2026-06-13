@@ -133,6 +133,24 @@ export class AppSettingsComponent implements OnInit {
         if (Utils.isNullOrUndefined(this.settings.loadingScreenPowered)) {
             this.settings.loadingScreenPowered = 'powered by <span><b>frango</b>team</span>';
         }
+        if (Utils.isNullOrUndefined(this.settings.appTitle)) {
+            this.settings.appTitle = 'FUXA';
+        }
+        if (Utils.isNullOrUndefined(this.settings.sidebarTitle)) {
+            this.settings.sidebarTitle = 'FUXA';
+        }
+        if (Utils.isNullOrUndefined(this.settings.aboutPoweredBy)) {
+            this.settings.aboutPoweredBy = 'powered by <span><b>frango</b>team</span>';
+        }
+        if (Utils.isNullOrUndefined(this.settings.arTitle)) {
+            this.settings.arTitle = 'FUXA AR';
+        }
+        if (Utils.isNullOrUndefined(this.settings.mapsAttribution)) {
+            this.settings.mapsAttribution = '&copy; FUXA';
+        }
+        if (Utils.isNullOrUndefined(this.settings.reportHeader)) {
+            this.settings.reportHeader = 'FUXA by frangoteam';
+        }
         this.resourcesService.getResources(ResourceType.images).subscribe((result: Resources) => {
             if (result) {
                 result.groups.forEach((group: ResourceGroup) => {

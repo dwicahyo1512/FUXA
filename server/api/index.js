@@ -132,7 +132,8 @@ function init(_server, _runtime) {
                 res.json({
                     loadingScreenLogo: runtime.settings.loadingScreenLogo || '',
                     loadingScreenText: runtime.settings.loadingScreenText || 'FUXA Loading...',
-                    loadingScreenPowered: runtime.settings.loadingScreenPowered || 'powered by <span><b>frango</b>team</span>'
+                    loadingScreenPowered: runtime.settings.loadingScreenPowered || 'powered by <span><b>frango</b>team</span>',
+                    appTitle: runtime.settings.appTitle || 'FUXA'
                 });
             });
 
@@ -306,6 +307,24 @@ function mergeUserSettings(settings) {
     }
     if (!utils.isNullOrUndefined(settings.loadingScreenPowered)) {
         runtime.settings.loadingScreenPowered = settings.loadingScreenPowered;
+    }
+    if (!utils.isNullOrUndefined(settings.appTitle)) {
+        runtime.settings.appTitle = settings.appTitle;
+    }
+    if (!utils.isNullOrUndefined(settings.sidebarTitle)) {
+        runtime.settings.sidebarTitle = settings.sidebarTitle;
+    }
+    if (!utils.isNullOrUndefined(settings.aboutPoweredBy)) {
+        runtime.settings.aboutPoweredBy = settings.aboutPoweredBy;
+    }
+    if (!utils.isNullOrUndefined(settings.arTitle)) {
+        runtime.settings.arTitle = settings.arTitle;
+    }
+    if (!utils.isNullOrUndefined(settings.mapsAttribution)) {
+        runtime.settings.mapsAttribution = settings.mapsAttribution;
+    }
+    if (!utils.isNullOrUndefined(settings.reportHeader)) {
+        runtime.settings.reportHeader = settings.reportHeader;
     }
 }
 

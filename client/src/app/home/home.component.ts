@@ -13,6 +13,7 @@ import { CardsViewComponent } from '../cards-view/cards-view.component';
 import { HmiService, ScriptOpenCard, ScriptSetView } from '../_services/hmi.service';
 import { ProjectService } from '../_services/project.service';
 import { AuthService } from '../_services/auth.service';
+import { SettingsService } from '../_services/settings.service';
 import { GaugesManager } from '../gauges/gauges.component';
 import { Hmi, View, ViewType, NaviModeType, NotificationModeType, ZoomModeType, HeaderSettings, LinkType, HeaderItem, Variable, GaugeStatus, GaugeSettings, GaugeEventType, LoginOverlayColorType, GaugeEvent } from '../_models/hmi';
 import { LoginComponent } from '../login/login.component';
@@ -94,6 +95,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
         private scriptService: ScriptService,
         private languageService: LanguageService,
         private authService: AuthService,
+        private settingsService: SettingsService,
         public gaugesManager: GaugesManager) {
         this.gridOptions.draggable = { enabled: false };
         this.gridOptions.resizable = { enabled: false };
@@ -285,12 +287,12 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
     onLogin() {
         let cuser = this.authService.getUser();
         if (cuser) {
+            const wl = this.settingsService.getSettings();
             let dialogRef = this.dialog.open(DialogUserInfo, {
                 id: 'myuserinfo',
-                // minWidth: '250px',
                 position: { top: '50px', right: '15px' },
                 backdropClass: 'user-info',
-                data: cuser
+                data: { ...cuser, appTitle: wl.appTitle, aboutPoweredBy: wl.aboutPoweredBy }
             });
             dialogRef.afterClosed().subscribe(result => {
                 if (result) {

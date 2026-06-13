@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { GaugesManager } from '../../gauges/gauges.component';
 import { FuxaViewComponent } from '../../fuxa-view/fuxa-view.component';
 import { ProjectService } from '../../_services/project.service';
+import { SettingsService } from '../../_services/settings.service';
 import { MatMenuTrigger as MatMenuTrigger } from '@angular/material/menu';
 import { MatDialog as MatDialog } from '@angular/material/dialog';
 import { GaugeAction, GaugeRangeProperty, Hmi, View, ViewProperty } from '../../_models/hmi';
@@ -65,7 +66,8 @@ export class MapsViewComponent implements AfterViewInit, OnDestroy {
         private projectService: ProjectService,
         private appRef: ApplicationRef,
         private translateService: TranslateService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private settingsService: SettingsService
     ) { }
 
     ngAfterViewInit(): void {
@@ -78,7 +80,7 @@ export class MapsViewComponent implements AfterViewInit, OnDestroy {
             this.map = L.map('map').setView(startLocation, this.view.property?.startZoom || 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; FUXA'
+                attribution: this.settingsService.getSettings().mapsAttribution || '&copy; FUXA'
             }).addTo(this.map);
 
             this.loadMapsResources();

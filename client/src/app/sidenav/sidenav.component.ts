@@ -6,6 +6,7 @@ import { LayoutSettings, NaviItem, NavigationSettings, LinkType, NaviItemType } 
 import { Router } from '@angular/router';
 import { ProjectService } from '../_services/project.service';
 import { LanguageService } from '../_services/language.service';
+import { SettingsService } from '../_services/settings.service';
 import { Utils } from '../_helpers/utils';
 
 @Component({
@@ -33,6 +34,7 @@ export class SidenavComponent implements AfterContentChecked {
                 private router: Router,
                 private projectService: ProjectService,
                 private languageService: LanguageService,
+                private settingsService: SettingsService,
                 private changeDetector: ChangeDetectorRef) {
     }
 
@@ -72,6 +74,10 @@ export class SidenavComponent implements AfterContentChecked {
 
     isExpandable(item: NaviItem): boolean {
         return this.expandableNavItems.includes(this.layout.navigation.type) && item.children?.length > 0;
+    }
+
+    get sidebarTitleText(): string {
+        return this.settingsService.getSettings().sidebarTitle || 'FUXA';
     }
 
     public setLayout(layout: LayoutSettings) {

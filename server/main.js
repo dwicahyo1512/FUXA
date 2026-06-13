@@ -208,6 +208,24 @@ try {
         if (!utils.isNullOrUndefined(mysettings.loadingScreenPowered)) {
             settings.loadingScreenPowered = mysettings.loadingScreenPowered;
         }
+        if (!utils.isNullOrUndefined(mysettings.appTitle)) {
+            settings.appTitle = mysettings.appTitle;
+        }
+        if (!utils.isNullOrUndefined(mysettings.sidebarTitle)) {
+            settings.sidebarTitle = mysettings.sidebarTitle;
+        }
+        if (!utils.isNullOrUndefined(mysettings.aboutPoweredBy)) {
+            settings.aboutPoweredBy = mysettings.aboutPoweredBy;
+        }
+        if (!utils.isNullOrUndefined(mysettings.arTitle)) {
+            settings.arTitle = mysettings.arTitle;
+        }
+        if (!utils.isNullOrUndefined(mysettings.mapsAttribution)) {
+            settings.mapsAttribution = mysettings.mapsAttribution;
+        }
+        if (!utils.isNullOrUndefined(mysettings.reportHeader)) {
+            settings.reportHeader = mysettings.reportHeader;
+        }
         if (mysettings.nodeRedEnabled === true && utils.isNullOrUndefined(mysettings.nodeRedAuthMode)) {
             settings.nodeRedAuthMode = 'legacy-open';
         }

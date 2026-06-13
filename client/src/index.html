@@ -6,6 +6,20 @@
     <title>FUXA</title>
     <meta charset="UTF-8">
     <script>
+        document.title = 'FUXA';
+        var xhrTitle = new XMLHttpRequest();
+        xhrTitle.open('GET', '/api/loading-screen', true);
+        xhrTitle.onload = function() {
+            if (xhrTitle.status === 200) {
+                try {
+                    var d = JSON.parse(xhrTitle.responseText);
+                    if (d.appTitle) document.title = d.appTitle;
+                } catch(e) {}
+            }
+        };
+        xhrTitle.send();
+    </script>
+    <script>
         (function() {
             // Use actual screen dimensions
             var screenWidth = window.screen.width * (window.devicePixelRatio || 1);

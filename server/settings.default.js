@@ -128,6 +128,13 @@ module.exports = {
     loadingScreenLogo: '',
     loadingScreenText: 'FUXA Loading...',
     loadingScreenPowered: 'powered by <span><b>frango</b>team</span>',
+    appTitle: 'FUXA',
+    sidebarTitle: 'FUXA',
+    aboutPoweredBy: 'powered by <span><b>frango</b>team</span>',
+    arTitle: 'FUXA AR',
+    mapsAttribution: '&copy; FUXA',
+    reportHeader: 'FUXA by frangoteam',
+    faviconUrl: '',
 
     nodeRedEnabled: false,
 

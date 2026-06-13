@@ -15,6 +15,7 @@ import { ResourcesService } from '../../_services/resources.service';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../_services/project.service';
+import { SettingsService } from '../../_services/settings.service';
 import { PluginService } from '../../_services/plugin.service';
 import { PluginGroupType } from '../../_models/plugin';
 pdfMake.vfs = pdfFonts;
@@ -47,6 +48,7 @@ export class ReportEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         private translateService: TranslateService,
         private resourcesService: ResourcesService,
         private pluginService: PluginService,
+        private settingsService: SettingsService,
         @Inject(MAT_DIALOG_DATA) public data: ReportEditorData) {
 
         const existingReportNames = this.projectService.getReports()?.filter(report => report.id !== data.report.id)?.map(report => report.name);
@@ -140,7 +142,7 @@ export class ReportEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     getPdfContent(report: Report): Observable<Object>  {
         return new Observable((observer) => {
             let docDefinition = {...report.docproperty };
-            docDefinition['header'] = { text: 'FUXA by frangoteam', style:[{fontSize: 6}]};
+            docDefinition['header'] = { text: this.settingsService.getSettings().reportHeader || 'FUXA by frangoteam', style:[{fontSize: 6}]};
             docDefinition['footer'] = (currentPage, pageCount) => ({ text: currentPage.toString() + ' / ' + pageCount, style:[{alignment: 'right', fontSize: 8}]});
             // first resolve async images from server
             this.checkImages(report.content.items.filter(item => item.type === this.itemChartType)).subscribe((images: ImageItem[] ) => {

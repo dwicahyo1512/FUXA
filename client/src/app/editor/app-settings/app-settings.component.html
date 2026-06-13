@@ -100,7 +100,7 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="{{'dlg.app-settings-loading-screen' | translate}}">
+            <mat-tab label="{{'dlg.app-settings-white-label' | translate}}">
                 <div class="block mt20 tab-loading-screen">
                     <div class="my-form-field block">
                         <span>{{'dlg.app-settings-loading-screen-logo' | translate}}</span>
@@ -124,6 +124,30 @@
                     <div class="my-form-field block mt15 w100">
                         <span>{{'dlg.app-settings-loading-screen-powered' | translate}}</span>
                         <input [(ngModel)]="settings.loadingScreenPowered" placeholder="powered by frangoteam" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-app-title' | translate}}</span>
+                        <input [(ngModel)]="settings.appTitle" placeholder="FUXA" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-sidebar-title' | translate}}</span>
+                        <input [(ngModel)]="settings.sidebarTitle" placeholder="FUXA" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-about-powered-by' | translate}}</span>
+                        <input [(ngModel)]="settings.aboutPoweredBy" placeholder="powered by frangoteam" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-ar-title' | translate}}</span>
+                        <input [(ngModel)]="settings.arTitle" placeholder="FUXA AR" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-maps-attribution' | translate}}</span>
+                        <input [(ngModel)]="settings.mapsAttribution" placeholder="&copy; FUXA" style="width: 320px" type="text">
+                    </div>
+                    <div class="my-form-field block mt15 w100">
+                        <span>{{'dlg.app-settings-report-header' | translate}}</span>
+                        <input [(ngModel)]="settings.reportHeader" placeholder="FUXA by frangoteam" style="width: 320px" type="text">
                     </div>
                     <div class="loading-preview mt20" *ngIf="settings.loadingScreenLogo">
                         <span>{{'dlg.app-settings-loading-screen-preview' | translate}}</span>

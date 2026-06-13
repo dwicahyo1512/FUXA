@@ -47,6 +47,18 @@ export class AppSettings {
     loadingScreenText = 'FUXA Loading...';
     /** Loading screen powered by text (HTML) */
     loadingScreenPowered = 'powered by <span><b>frango</b>team</span>';
+    /** Browser tab title */
+    appTitle = 'FUXA';
+    /** Sidebar navigation title text */
+    sidebarTitle = 'FUXA';
+    /** About dialog powered by text (HTML) */
+    aboutPoweredBy = 'powered by <span><b>frango</b>team</span>';
+    /** AR view title */
+    arTitle = 'FUXA AR';
+    /** Maps tile attribution */
+    mapsAttribution = '&copy; FUXA';
+    /** PDF report header text */
+    reportHeader = 'FUXA by frangoteam';
 }
 
 export class EditorSectionMessagesSettings {

@@ -147,6 +147,30 @@ export class SettingsService {
             this.appSettings.loadingScreenPowered = settings.loadingScreenPowered;
             dirty = true;
         }
+        if (settings.appTitle !== this.appSettings.appTitle) {
+            this.appSettings.appTitle = settings.appTitle;
+            dirty = true;
+        }
+        if (settings.sidebarTitle !== this.appSettings.sidebarTitle) {
+            this.appSettings.sidebarTitle = settings.sidebarTitle;
+            dirty = true;
+        }
+        if (settings.aboutPoweredBy !== this.appSettings.aboutPoweredBy) {
+            this.appSettings.aboutPoweredBy = settings.aboutPoweredBy;
+            dirty = true;
+        }
+        if (settings.arTitle !== this.appSettings.arTitle) {
+            this.appSettings.arTitle = settings.arTitle;
+            dirty = true;
+        }
+        if (settings.mapsAttribution !== this.appSettings.mapsAttribution) {
+            this.appSettings.mapsAttribution = settings.mapsAttribution;
+            dirty = true;
+        }
+        if (settings.reportHeader !== this.appSettings.reportHeader) {
+            this.appSettings.reportHeader = settings.reportHeader;
+            dirty = true;
+        }
         if (dirty) {
             this.settings$.next(this.appSettings);
         }

@@ -86,6 +86,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 		try {
 			this.settingsService.init();
+			this.settingsService.settings$.subscribe(settings => {
+				if (settings.appTitle) {
+					this.document.title = settings.appTitle;
+				}
+			});
 			let hmi = this.projectService.getHmi();
 			if (hmi) {
 				this.checkSettings();
