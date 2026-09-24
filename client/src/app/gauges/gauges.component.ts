@@ -30,6 +30,7 @@ import { HtmlIframeComponent } from './controls/html-iframe/html-iframe.componen
 import { HtmlTableComponent } from './controls/html-table/html-table.component';
 import { DataTableComponent } from './controls/html-table/data-table/data-table.component';
 import { HtmlSchedulerComponent } from './controls/html-scheduler/html-scheduler.component';
+import { HtmlRecipeComponent } from './controls/html-recipe/html-recipe.component';
 import { ChartOptions } from '../gui-helpers/ngx-uplot/ngx-uplot.component';
 import { GaugeBaseComponent } from './gauge-base/gauge-base.component';
 import { HtmlImageComponent } from './controls/html-image/html-image.component';
@@ -41,6 +42,13 @@ import { HtmlVideoComponent } from './controls/html-video/html-video.component';
 
 @Injectable()
 export class GaugesManager {
+
+    private static readonly SvgShapeElements = 'path, rect, circle, ellipse, line, polyline, polygon, text, image, use';
+    private static readonly ShapeTypeTags = [
+        ShapesComponent.TypeTag,
+        ProcEngComponent.TypeTag,
+        ApeShapesComponent.TypeTag
+    ];
 
     @Output() onchange: EventEmitter<Variable> = new EventEmitter();
     @Output() onevent: EventEmitter<Event> = new EventEmitter();
@@ -64,9 +72,8 @@ export class GaugesManager {
     // list of gauges with input
     static GaugeWithProperty = [HtmlInputComponent.prefix, HtmlSelectComponent.prefix, HtmlSwitchComponent.prefix];
     // list of gauges tags to check who as events like mouse click
-    static GaugeWithEvents = [HtmlButtonComponent.TypeTag, GaugeSemaphoreComponent.TypeTag, ShapesComponent.TypeTag, ProcEngComponent.TypeTag,
-    ApeShapesComponent.TypeTag, HtmlImageComponent.TypeTag, HtmlInputComponent.TypeTag, PanelComponent.TypeTag, HtmlSelectComponent.TypeTag,
-    HtmlSwitchComponent.TypeTag];
+    static GaugeWithEvents = [HtmlButtonComponent.TypeTag, GaugeSemaphoreComponent.TypeTag, ...GaugesManager.ShapeTypeTags,
+    HtmlImageComponent.TypeTag, HtmlInputComponent.TypeTag, PanelComponent.TypeTag, HtmlSelectComponent.TypeTag, HtmlSwitchComponent.TypeTag];
     // list of gauges tags to check who as events like mouse click
     static GaugeWithActions = [ApeShapesComponent, PipeComponent, ProcEngComponent, ShapesComponent, HtmlButtonComponent, HtmlSelectComponent,
         ValueComponent, HtmlInputComponent, GaugeSemaphoreComponent, HtmlImageComponent, PanelComponent, HtmlVideoComponent];
@@ -74,7 +81,7 @@ export class GaugesManager {
     static Gauges = [ValueComponent, HtmlInputComponent, HtmlButtonComponent, HtmlBagComponent,
         HtmlSelectComponent, HtmlChartComponent, GaugeProgressComponent, GaugeSemaphoreComponent, ShapesComponent, ProcEngComponent, ApeShapesComponent,
         PipeComponent, SliderComponent, HtmlSwitchComponent, HtmlGraphComponent, HtmlIframeComponent, HtmlTableComponent,
-        HtmlImageComponent, PanelComponent, HtmlVideoComponent, HtmlSchedulerComponent];
+        HtmlImageComponent, PanelComponent, HtmlVideoComponent, HtmlSchedulerComponent, HtmlRecipeComponent];
 
     constructor(private hmiService: HmiService,
         private authService: AuthService,
@@ -125,7 +132,8 @@ export class GaugesManager {
     createGaugeStatus(ga: GaugeSettings): GaugeStatus {
         let result = new GaugeStatus();
         if (!ga.type.startsWith(HtmlChartComponent.TypeTag) && !ga.type.startsWith(HtmlGraphComponent.TypeTag) &&
-            !ga.type.startsWith(HtmlTableComponent.TypeTag) && !ga.type.startsWith(HtmlSchedulerComponent.TypeTag)) {
+            !ga.type.startsWith(HtmlTableComponent.TypeTag) && !ga.type.startsWith(HtmlSchedulerComponent.TypeTag) &&
+            !ga.type.startsWith(HtmlRecipeComponent.TypeTag)) {
             result.onlyChange = true;
         }
         if (ga.type.startsWith(SliderComponent.TypeTag)) {
@@ -156,6 +164,23 @@ export class GaugesManager {
             }
         }
         return false;
+    }
+
+    private setShapePointerEvents(ga: GaugeSettings, element: Element) {
+        if (!GaugesManager.isShapeType(ga.type) || !element) {
+            return;
+        }
+
+        if (element.matches(GaugesManager.SvgShapeElements)) {
+            element.setAttribute('pointer-events', 'all');
+        }
+        element.querySelectorAll(GaugesManager.SvgShapeElements).forEach(shapeElement => {
+            shapeElement.setAttribute('pointer-events', 'all');
+        });
+    }
+
+    private static isShapeType(type: string): boolean {
+        return !!type && GaugesManager.ShapeTypeTags.some(typeTag => type.startsWith(typeTag));
     }
 
     /**
@@ -210,6 +235,10 @@ export class GaugesManager {
         } else if (ga.type.startsWith(HtmlSchedulerComponent.TypeTag)) {
             delete this.mapGauges[ga.id];
             let gauge = HtmlSchedulerComponent.detectChange(ga, res, ref);
+            this.mapGauges[ga.id] = gauge;
+        } else if (ga.type.startsWith(HtmlRecipeComponent.TypeTag)) {
+            delete this.mapGauges[ga.id];
+            let gauge = HtmlRecipeComponent.detectChange(ga, res, ref);
             this.mapGauges[ga.id] = gauge;
         } else if (ga.type.startsWith(HtmlImageComponent.TypeTag)) {
             HtmlImageComponent.detectChange(ga, true);
@@ -293,6 +322,7 @@ export class GaugesManager {
             let ele = document.getElementById(ga.id);
             if (ele) {
                 ele.style.cursor = 'pointer';
+                this.setShapePointerEvents(ga, ele);
             }
         }
         let htmlEvents = this.getHtmlEvents(ga);
@@ -738,9 +768,23 @@ export class GaugesManager {
                     HtmlInputComponent.initElementColor(bkcolor, color, elems[i]);
                 } else if (type.startsWith(HtmlSelectComponent.TypeTag)) {
                     HtmlSelectComponent.initElementColor(bkcolor, color, elems[i]);
+                } else if (GaugesManager.isShapeType(type)) {
+                    GaugesManager.setSvgShapeColor(elems[i], 'fill', bkcolor);
+                    GaugesManager.setSvgShapeColor(elems[i], 'stroke', color);
                 }
             }
         }
+    }
+
+    private static setSvgShapeColor(element: Element, attribute: 'fill' | 'stroke', color: string) {
+        if (!color) {
+            return;
+        }
+
+        element.setAttribute(attribute, color);
+        element.querySelectorAll(`[${attribute}]`).forEach(child => {
+            child.setAttribute(attribute, color);
+        });
     }
 
 
@@ -909,6 +953,12 @@ export class GaugesManager {
             let gauge = HtmlVideoComponent.initElement(ga, isview);
             this.mapGauges[ga.id] = gauge;
             return gauge || true;
+        } else if (ga.type.startsWith(HtmlRecipeComponent.TypeTag)) {
+            let gauge = HtmlRecipeComponent.initElement(ga, res, ref, isview);
+            if (gauge) {
+                this.mapGauges[ga.id] = gauge;
+            }
+            return gauge;
         } else {
             let ele = document.getElementById(ga.id);
             ele?.setAttribute('data-name', ga.name);

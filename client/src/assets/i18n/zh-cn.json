@@ -701,6 +701,8 @@
 
     "editor.tools-zoom-title": "缩放工具[Ctrl+上/下]",
     "editor.tools-grid-title": "显示隐藏网格",
+    "editor.tools-movestep-title": "移动步长",
+    "editor.tools-movestep-custom": "自定义",
     "editor.tools-undo-title": "撤销 [Z]",
     "editor.tools-redo-title": "重做 [Y]",
     "editor.tools-clone-title": "复制元素 [D]",
@@ -742,6 +744,7 @@
     "shapes.action-refreshImage": "更新图像",
 
     "shapes.action-move": "移动",
+    "shapes.action-moveByTags": "按标签移动",
     "shapes.event-click": "点击",
     "shapes.event-dblclick": "双击",
     "shapes.event-mouseup": "鼠标松开",
@@ -822,6 +825,9 @@
     "slider.property-slider-color": "连接颜色",
     "slider.property-slider-background": "底色",
     "slider.property-slider-handle": "指针颜色",
+    "slider.property-slider-width": "条形宽度",
+    "slider.property-handle-width": "指针宽度",
+    "slider.property-handle-height": "指针高度",
 
     "html-switch.property-off-value": "关闭值",
     "html-switch.property-on-value": "开启值",
@@ -958,6 +964,7 @@
     "device.add-topics": "在broker上发布我的话题",
     "device.topic-publish-name": "主题名称",
     "device.topic-publish-path": "主题路径",
+        "device.topic-publish-retain": "在服务器上保留消息",
     "device.topic-publish": "发布",
     "device.topic-subscribe": "订阅",
     "device.topic-subscription-content": "内容",
@@ -1156,6 +1163,13 @@
     "gauges.property-action-toX" : "到位置X",
     "gauges.property-action-toY" : "到位置Y",
     "gauges.property-action-duration" : "持续时间",
+    "gauges.property-action-tagX" : "位置 X 标签",
+    "gauges.property-action-tagY" : "位置 Y 标签",
+    "gauges.property-action-axis" : "轴",
+    "gauges.property-action-value-min" : "值最小值",
+    "gauges.property-action-value-max" : "值最大值",
+    "gauges.property-action-position-min" : "位置最小值",
+    "gauges.property-action-position-max" : "位置最大值",
     "gauges.property-events-mapping-from": "上下文变量",
     "gauges.property-map-variable": "添加上下文变量进行绑定",
     "gauges.property-head-remove-mapvariable": "删除绑定",
@@ -1748,7 +1762,7 @@
     "msg.maps-location-name-exist": "位置名称已经存在！",
     "msg.text-name-exist": "文本名称已经存在！",
     "msg.texts-text-remove": "您是否想删除文本'{{value}}'?",
-    "msg.operation-unauthorized": "操作未经授权！"
+    "msg.operation-unauthorized": "操作未经授权！",
+    "gauges.property-icon-none": "无图标"
 }
-
 

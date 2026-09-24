@@ -340,6 +340,8 @@
     "editor.tools-launch-title": "현재 뷰 실행",
     "editor.tools-zoom-title": "확대 도구 [Ctrl+Up/Down]",
     "editor.tools-grid-title": "격자 보이기/숨기기",
+    "editor.tools-movestep-title": "이동 간격",
+    "editor.tools-movestep-custom": "사용자 지정",
     "editor.tools-undo-title": "실행취소 [Z]",
     "editor.tools-redo-title": "되돌리기 [Y]",
     "editor.tools-clone-title": "개체 복사 [D]",
@@ -365,6 +367,7 @@
     "shapes.action-stop": "멈추기",
     "shapes.action-clockwise": "시계방향으로 돌리기",
     "shapes.action-anticlockwise": "반시계방향으로 돌리기",
+    "shapes.action-moveByTags": "태그로 이동",
     "shapes.action-downup": "위아래 뒤집기",
     "shapes.event-click": "클릭",
     "shapes.event-onpage": "페이지 열기",
@@ -418,6 +421,9 @@
     "slider.property-slider-color": "커넥트 색",
     "slider.property-slider-background": "베이스 색",
     "slider.property-slider-handle": "포인터 색",
+    "slider.property-slider-width": "막대 너비",
+    "slider.property-handle-width": "포인터 너비",
+    "slider.property-handle-height": "포인터 높이",
 
     "html-switch.property-off-value": "Off 값",
     "html-switch.property-on-value": "On 값",
@@ -503,6 +509,7 @@
     "device.add-topics": "브로커에 항목 계시",
     "device.topic-publish-name": "항목 이름",
     "device.topic-publish-path": "항목 위치",
+        "device.topic-publish-retain": "브로커에 메시지 유지",
     "device.topic-publish": "항목",
     "device.topic-subscribe": "구독",
     "device.topic-subscription-content": "컨텐츠",
@@ -591,6 +598,14 @@
     "gauges.property-actions": "행동",
     "gauges.property-action-type": "타입",
     "gauges.property-action-param": "행동 Id",
+    "gauges.property-action-duration": "지속 시간",
+    "gauges.property-action-tagX": "위치 X 태그",
+    "gauges.property-action-tagY": "위치 Y 태그",
+    "gauges.property-action-axis": "축",
+    "gauges.property-action-value-min": "값 min",
+    "gauges.property-action-value-max": "값 max",
+    "gauges.property-action-position-min": "위치 min",
+    "gauges.property-action-position-max": "위치 max",
     "gauges.property-events-mapping-from": "컨텍스트 변수",
     "gauges.property-map-variable": "컨텍스트 변수 묶음 추가",
     "gauges.property-head-remove-mapvariable": "묶음 제거",
@@ -800,8 +815,8 @@
     "msg.signin-failed": "권한 없음",
     "msg.get-project-void": "프로젝트가 발견되지 않았습니다.!",
     "msg.editor-mode-locked": "편집자가 이미 열려있습니다!",
-    "msg.alarms-clear-success": "모든 알림이 취소되었습니다!"
+    "msg.alarms-clear-success": "모든 알림이 취소되었습니다!",
+    "gauges.property-icon-none": "아이콘 없음"
 }
-
 
 

@@ -35,6 +35,7 @@ export class AuthService {
 				}
 			}
 		}
+		this.publishAccessToken(this.currentUser?.token);
 		this.currentUser$.next(this.currentUser);
 
 		if (this.useRefreshCookieAuth) {
@@ -68,6 +69,7 @@ export class AuthService {
 							this.currentUser.infoRoles = JSON.parse(this.currentUser.info)?.roles;
 						}
 						this.saveUserToken(this.currentUser);
+						this.publishAccessToken(this.currentUser.token);
 						this.currentUser$.next(this.currentUser);
 					}
 					observer.next(null);
@@ -83,7 +85,7 @@ export class AuthService {
 	}
 
 	signOut() {
-		if (this.useRefreshCookieAuth && environment.serverEnabled) {
+		if (environment.serverEnabled && (this.useRefreshCookieAuth || this.settings.getSettings()?.nodeRedEnabled)) {
 			let header = new HttpHeaders({ 'Skip-Auth': 'true', 'Skip-Error': 'true' });
 			this.http.post(this.endPointConfig + '/api/signout', {}, { headers: header, withCredentials: true }).subscribe({
 				next: () => this.finalizeSignOut(),
@@ -104,6 +106,10 @@ export class AuthService {
 
 	getUserToken(): string {
 		return this.currentUser?.token;
+	}
+
+	private publishAccessToken(token: string = null) {
+		(window as any).fuxaAccessToken = token || null;
 	}
 
     isAdmin(): boolean {
@@ -130,6 +136,7 @@ export class AuthService {
 		}
 		this.currentUser.token = token;
 		this.saveUserToken(this.currentUser);
+		this.publishAccessToken(token);
 		this.currentUser$.next(this.currentUser);
 	}
 
@@ -157,6 +164,7 @@ export class AuthService {
 		const result = !!this.currentUser;
 		this.currentUser = null;
 		sessionStorage.removeItem('currentUser');
+		this.publishAccessToken(null);
 		this.currentUser$.next(this.currentUser);
 		return result;
 	}
@@ -201,6 +209,7 @@ export class AuthService {
 					}
 					this.currentUser = refreshed;
 					this.saveUserToken(this.currentUser);
+					this.publishAccessToken(this.currentUser.token);
 					this.currentUser$.next(this.currentUser);
 				}
 			},

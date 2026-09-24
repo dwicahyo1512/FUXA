@@ -7,12 +7,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authJwt = require('../jwt-helper');
 
+// In order to work under a reverse proxy, I import the BASE PATH
+const BASE_PATH = (process.env.BASE_PATH || '').replace(/\/+$/, '');
+
 var runtime;
 var secretCode;
 var tokenExpiresIn;
 var enableRefreshCookieAuth = false;
 var refreshTokenExpiresIn = '7d';
 const refreshCookieName = 'fuxa_refresh';
+const nodeRedAuthCookieName = 'nodered_auth';
 
 function parseExpiresToMs(expiresIn) {
     if (expiresIn === undefined || expiresIn === null) {
@@ -61,7 +65,7 @@ function setRefreshCookie(res, token) {
         httpOnly: true,
         sameSite: 'lax',
         secure: !!runtime?.settings?.https,
-        path: '/api/refresh'
+        path: BASE_PATH + '/api/refresh'
     };
     if (maxAge) {
         options.maxAge = maxAge;
@@ -70,7 +74,24 @@ function setRefreshCookie(res, token) {
 }
 
 function clearRefreshCookie(res) {
-    res.clearCookie(refreshCookieName, { path: '/api/refresh' });
+    res.clearCookie(refreshCookieName, {
+        path: BASE_PATH + '/api/refresh'
+    });
+}
+
+function clearNodeRedAuthCookie(res) {
+    res.clearCookie(nodeRedAuthCookieName, {
+        path: BASE_PATH + '/nodered',
+        sameSite: 'lax'
+    });
+    res.clearCookie(nodeRedAuthCookieName, {
+        path: BASE_PATH || '/',
+        sameSite: 'lax'
+    });
+}
+
+function sendInvalidSignInResponse(res) {
+    res.status(401).json({ status: 'error', message: 'Invalid email/password!!!', data: null });
 }
 
 module.exports = {
@@ -119,12 +140,12 @@ module.exports = {
                         });
                         runtime.logger.info('api-signin: ' + userInfo[0].username + ' ' + userInfo[0].fullname + ' ' + userInfo[0].groups);
                     } else {
-                        res.status(401).json({ status: 'error', message: 'Invalid email/password!!!', data: null });
+                        sendInvalidSignInResponse(res);
                         runtime.logger.error('api post signin: Invalid email/password!!!');
                     }
                 } else {
-                    res.status(404).end();
-                    runtime.logger.error('api post signin: Not Found!');
+                    sendInvalidSignInResponse(res);
+                    runtime.logger.error('api post signin: Invalid email/password!!!');
                 }
             }).catch(function (err) {
                 if (err.code) {
@@ -199,6 +220,7 @@ module.exports = {
             if (enableRefreshCookieAuth) {
                 clearRefreshCookie(res);
             }
+            clearNodeRedAuthCookie(res);
             res.status(204).end();
         });
 

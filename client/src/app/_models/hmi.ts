@@ -326,8 +326,10 @@ export enum GaugeActionsType {
     downup = 'shapes.action-downup',
     rotate = 'shapes.action-rotate',
     move = 'shapes.action-move',
+    moveByTags = 'shapes.action-moveByTags',
     monitor = 'shapes.action-monitor',
     refreshImage = 'shapes.action-refreshImage',
+    loadImage = 'shapes.action-loadImage',
     start = 'shapes.action-start',
     pause = 'shapes.action-pause',
     reset = 'shapes.action-reset',
@@ -359,6 +361,19 @@ export class GaugeActionMove {
     toX = 0;
     toY = 0;
     duration = 100;
+}
+
+export class GaugeActionMoveByTags {
+    axis: 'x' | 'y' = 'x';
+    valueMin = 0;
+    valueMax = 100;
+    positionMin = 0;
+    positionMax = 100;
+    duration = 100;
+}
+
+export class GaugeActionLoadImage {
+    url: '';
 }
 
 export class GaugePropertyColor {

@@ -580,6 +580,8 @@
 
     "editor.tools-zoom-title": "Zoom-Werkzeug [Strg+Auf/Ab]",
     "editor.tools-grid-title": "Raster einblenden/ausblenden",
+    "editor.tools-movestep-title": "Bewegungsschritt",
+    "editor.tools-movestep-custom": "Benutzerdefiniert",
     "editor.tools-undo-title": "Rückgängig [Z]",
     "editor.tools-redo-title": "Wiederherstellen [Y]",
     "editor.tools-clone-title": "Element duplizieren [D]",
@@ -615,6 +617,7 @@
     "shapes.action-downup": "Nach oben und unten",
     "shapes.action-rotate": "Drehen",
     "shapes.action-move": "Bewegen",
+    "shapes.action-moveByTags": "Bewegen nach Tags",
     "shapes.event-click": "Klicken",
     "shapes.event-mouseup": "MouseUp",
     "shapes.event-mousedown": "MouseDown",
@@ -674,6 +677,9 @@
     "slider.property-slider-color": "Farbe verbinden",
     "slider.property-slider-background": "Grundfarbe",
     "slider.property-slider-handle": "Zeigerfarbe",
+    "slider.property-slider-width": "Balkenbreite",
+    "slider.property-handle-width": "Zeigerbreite",
+    "slider.property-handle-height": "Zeigerhöhe",
 
     "html-switch.property-off-value": "Wert Aus",
     "html-switch.property-on-value": "Wert Ein",
@@ -789,6 +795,7 @@
     "device.add-topics": "Veröffentliche meine Themen beim Broker",
     "device.topic-publish-name": "Themenname",
     "device.topic-publish-path": "Themenpfad",
+        "device.topic-publish-retain": "Nachricht auf dem Broker behalten",
     "device.topic-publish": "Veröffentlichen",
     "device.topic-subscribe": "Abonnieren",
     "device.topic-subscription-content": "Inhalt",
@@ -916,6 +923,13 @@
     "gauges.property-action-toX" : "Zur Position X",
     "gauges.property-action-toY" : "Zur Position Y",
     "gauges.property-action-duration" : "Dauer",
+    "gauges.property-action-tagX" : "Position X Tag",
+    "gauges.property-action-tagY" : "Position Y Tag",
+    "gauges.property-action-axis" : "Achse",
+    "gauges.property-action-value-min" : "Wert Min",
+    "gauges.property-action-value-max" : "Wert Max",
+    "gauges.property-action-position-min" : "Position Min",
+    "gauges.property-action-position-max" : "Position Max",
     "gauges.property-events-mapping-from": "Kontextvariable",
     "gauges.property-map-variable": "Kontextvariable zur Bindung hinzufügen",
     "gauges.property-head-remove-mapvariable": "Die Bindung entfernen",
@@ -1335,8 +1349,8 @@
     "msg.export-alarms-error": "Alarme exportieren fehlgeschlagen!",
     "msg.report-build-forced": "Senden zum Erstellen des Berichts erfolgreich",
     "msg.report-build-error": "Senden zum Erstellen des Berichts fehlgeschlagen!",
-    "msg.device-tags-request-result": "Lade {{value}} von {{current}}"
+    "msg.device-tags-request-result": "Lade {{value}} von {{current}}",
+    "gauges.property-icon-none": "Kein Symbol"
 }
-
 
 

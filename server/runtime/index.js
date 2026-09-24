@@ -19,6 +19,8 @@ const jwt = require('jsonwebtoken');
 const daqstorage = require('./storage/daqstorage');
 const schedulerStorage = require('./scheduler/scheduler-storage');
 const schedulerService = require('./scheduler/scheduler-service');
+const recipeStorage = require('./recipes/recipe-storage');
+const recipeService = require('./recipes/recipe-service');
 var jobs = require('./jobs');
 
 var api;
@@ -72,6 +74,15 @@ function init(_io, _api, _settings, _log, eventsMain) {
         logger.info('runtime init scheduler services successful!', true);
     }).catch(err => {
         logger.error('runtime.failed-to-init scheduler services: ' + err);
+    });
+
+    // Initialize recipe services
+    recipeStorage.init(settings, logger, runtime).then(() => {
+        return recipeService.init(settings, logger, runtime);
+    }).then(() => {
+        logger.info('runtime init recipes successful!', true);
+    }).catch(err => {
+        logger.error('runtime.failed-to-init recipes: ' + err);
     });
 
     plugins.init(settings, logger).then(result => {
@@ -150,10 +161,10 @@ function init(_io, _api, _settings, _log, eventsMain) {
             if (message === 'get') {
                 var adevs = devices.getDevicesStatus();
                 for (var id in adevs) {
-                    updateDeviceStatus({ id: id, status: adevs[id] });
+                    socket.emit(Events.IoEventTypes.DEVICE_STATUS, { id: id, status: adevs[id] });
                 }
             } else {
-                updateDeviceStatus(message);
+                logger.warn(`${Events.IoEventTypes.DEVICE_STATUS}: rejected client status update from ${socket.userId || 'guest'}`);
             }
         });
         // client ask device property
@@ -211,14 +222,14 @@ function init(_io, _api, _settings, _log, eventsMain) {
                 if (message) {
                     if (message.device) {
                         devices.browseDevice(message.device, message.node, function (nodes) {
-                            io.emit(Events.IoEventTypes.DEVICE_BROWSE, nodes);
+                            socket.emit(Events.IoEventTypes.DEVICE_BROWSE, nodes);
                         }).then(result => {
                             message.result = result;
-                            io.emit(Events.IoEventTypes.DEVICE_BROWSE, message);
+                            socket.emit(Events.IoEventTypes.DEVICE_BROWSE, message);
                         }).catch(function (err) {
                             logger.error(`${Events.IoEventTypes.DEVICE_BROWSE}: ${err}`);
                             message.error = err;
-                            io.emit(Events.IoEventTypes.DEVICE_BROWSE, message);
+                            socket.emit(Events.IoEventTypes.DEVICE_BROWSE, message);
                         });
                     }
                 }
@@ -236,11 +247,11 @@ function init(_io, _api, _settings, _log, eventsMain) {
                 if (message) {
                     if (message.device) {
                         devices.readNodeAttribute(message.device, message.node).then(result => {
-                            io.emit(Events.IoEventTypes.DEVICE_NODE_ATTRIBUTE, message);
+                            socket.emit(Events.IoEventTypes.DEVICE_NODE_ATTRIBUTE, message);
                         }).catch(function (err) {
                             logger.error(`${Events.IoEventTypes.DEVICE_NODE_ATTRIBUTE}: ${err}`);
                             message.error = err;
-                            io.emit(Events.IoEventTypes.DEVICE_NODE_ATTRIBUTE, message);
+                            socket.emit(Events.IoEventTypes.DEVICE_NODE_ATTRIBUTE, message);
                         });
                     }
                 }
@@ -287,7 +298,7 @@ function init(_io, _api, _settings, _log, eventsMain) {
         // client ask alarms status
         socket.on(Events.IoEventTypes.ALARMS_STATUS, (message) => {
             if (message === 'get') {
-                updateAlarmsStatus();
+                updateAlarmsStatus(socket);
             }
         });
         // client ask host interfaces
@@ -301,16 +312,16 @@ function init(_io, _api, _settings, _log, eventsMain) {
                     message = {};
                     utils.getHostInterfaces().then(result => {
                         message.result = result;
-                        io.emit(Events.IoEventTypes.HOST_INTERFACES, message);
+                        socket.emit(Events.IoEventTypes.HOST_INTERFACES, message);
                     }).catch(function (err) {
                         logger.error(`${Events.IoEventTypes.HOST_INTERFACES}: ${err}`);
                         message.error = err;
-                        io.emit(Events.IoEventTypes.HOST_INTERFACES, message);
+                        socket.emit(Events.IoEventTypes.HOST_INTERFACES, message);
                     });
                 } else {
                     logger.error(`${Events.IoEventTypes.HOST_INTERFACES}: wrong message`);
                     message.error = 'wrong message';
-                    io.emit(Events.IoEventTypes.HOST_INTERFACES, message);
+                    socket.emit(Events.IoEventTypes.HOST_INTERFACES, message);
                 }
             } catch (err) {
                 logger.error(`${Events.IoEventTypes.HOST_INTERFACES}: ${err}`);
@@ -352,16 +363,16 @@ function init(_io, _api, _settings, _log, eventsMain) {
                 if (message && message.deviceId) {
                     devices.getDeviceTagsResult(message.deviceId).then(result => {
                         message.result = result;
-                        io.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
+                        socket.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
                     }).catch(function (err) {
                         logger.error(`${Events.IoEventTypes.DEVICE_TAGS_REQUEST}: ${err}`);
                         message.error = err;
-                        io.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
+                        socket.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
                     });
                 } else {
                     logger.error(`${Events.IoEventTypes.DEVICE_TAGS_REQUEST}: wrong message`);
                     message.error = 'wrong message';
-                    io.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
+                    socket.emit(Events.IoEventTypes.DEVICE_TAGS_REQUEST, message);
                 }
             } catch (err) {
                 logger.error(`${Events.IoEventTypes.DEVICE_TAGS_REQUEST}: ${err}`);
@@ -395,6 +406,20 @@ function init(_io, _api, _settings, _log, eventsMain) {
                 devices.enableDevice(message.deviceName, message.enable);
             } catch (err) {
                 logger.error(`${Events.IoEventTypes.DEVICE_ENABLE}: ${err}`);
+            }
+        });
+        // client cancel recipe execution
+        socket.on('recipe:cancel-execution', (message) => {
+            try {
+                if (!isSocketWriteAuthorized(socket)) {
+                    logger.warn('recipe:cancel-execution: unauthorized request from ' + (socket.userId || 'guest'));
+                    return;
+                }
+                if (message && message.recipeId) {
+                    runtime.recipeService.cancelRecipe(message.recipeId);
+                }
+            } catch (err) {
+                logger.error('recipe:cancel-execution: ' + err);
             }
         });
     });
@@ -608,15 +633,37 @@ function updateDeviceStatus(event) {
 /**
  * Transmit the alarms status to all frontend
  */
-function updateAlarmsStatus() {
+function getSocketPermission(socket) {
+    if (!settings || !settings.secureEnabled) {
+        return -1;
+    }
+    if (settings.userRole && socket?.userId !== 'admin') {
+        return users.getUserCache(socket?.userId);
+    }
+    return socket?.userGroups;
+}
+
+function updateAlarmsStatus(socket) {
     try {
-        alarmsMgr.getAlarmsStatus().then(function (result) {
-            io.emit(Events.IoEventTypes.ALARMS_STATUS, result);
-        }).catch(function (err) {
-            if (err) {
-                logger.error('runtime.failed-to-update-alarms: ' + err);
-            }
-        });
+        if (socket) {
+            alarmsMgr.getAlarmsStatus(getSocketPermission(socket)).then(function (result) {
+                socket.emit(Events.IoEventTypes.ALARMS_STATUS, result);
+            }).catch(function (err) {
+                if (err) {
+                    logger.error('runtime.failed-to-update-alarms: ' + err);
+                }
+            });
+        } else {
+            Array.from(io.sockets.sockets.values()).forEach((clientSocket) => {
+                alarmsMgr.getAlarmsStatus(getSocketPermission(clientSocket)).then(function (result) {
+                    clientSocket.emit(Events.IoEventTypes.ALARMS_STATUS, result);
+                }).catch(function (err) {
+                    if (err) {
+                        logger.error('runtime.failed-to-update-alarms: ' + err);
+                    }
+                });
+            });
+        }
     } catch (err) {
         logger.error('runtime.failed-to-update-alarms: ' + err);
     }
@@ -744,6 +791,8 @@ var runtime = module.exports = {
     get daqStorage() { return daqstorage },
     get schedulerStorage() { return schedulerStorage },
     get schedulerService() { return schedulerService },
+    get recipeStorage() { return recipeStorage },
+    get recipeService() { return recipeService },
     get alarmsMgr() { return alarmsMgr },
     get notificatorMgr() { return notificatorMgr },
     get scriptsMgr() { return scriptsMgr },

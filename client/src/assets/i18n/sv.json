@@ -700,6 +700,8 @@
 
     "editor.tools-zoom-title": "Zoomverktyg [Ctrl+Upp/Ner]",
     "editor.tools-grid-title": "Visa/Dölj rutnät",
+    "editor.tools-movestep-title": "Förflyttningssteg",
+    "editor.tools-movestep-custom": "Anpassat",
     "editor.tools-undo-title": "Ångra [Z]",
     "editor.tools-redo-title": "Gör om [Y]",
     "editor.tools-clone-title": "Duplicera element [D]",
@@ -739,6 +741,7 @@
     "shapes.action-downup": "Upp och ner",
     "shapes.action-rotate": "Rotera",
     "shapes.action-move": "Flytta",
+    "shapes.action-moveByTags": "Flytta med taggar",
     "shapes.event-click": "Klick",
     "shapes.event-dblclick": "Dubbelklick",
     "shapes.event-mouseup": "Musknapp släppt",
@@ -819,6 +822,9 @@
     "slider.property-slider-color": "Färg för koppling",
     "slider.property-slider-background": "Basfärg",
     "slider.property-slider-handle": "Pekarfärg",
+    "slider.property-slider-width": "Stapeltjocklek",
+    "slider.property-handle-width": "Pekarbredd",
+    "slider.property-handle-height": "Pekarhöjd",
 
     "html-switch.property-off-value": "Av-värde",
     "html-switch.property-on-value": "På-värde",
@@ -951,6 +957,7 @@
     "device.add-topics": "Publicera mina ämnen på broker",
     "device.topic-publish-name": "Ämnesnamn",
     "device.topic-publish-path": "Ämnesväg",
+    "device.topic-publish-retain": "Behåll meddelande på broker",
     "device.topic-publish": "Publicera",
     "device.topic-subscribe": "Prenumerera",
     "device.topic-subscription-content": "Innehåll",
@@ -1145,6 +1152,13 @@
     "gauges.property-action-toX": "Till position X",
     "gauges.property-action-toY": "Till position Y",
     "gauges.property-action-duration": "Varaktighet",
+    "gauges.property-action-tagX": "Position X tagg",
+    "gauges.property-action-tagY": "Position Y tagg",
+    "gauges.property-action-axis": "Axel",
+    "gauges.property-action-value-min": "Värde min",
+    "gauges.property-action-value-max": "Värde max",
+    "gauges.property-action-position-min": "Position min",
+    "gauges.property-action-position-max": "Position max",
     "gauges.property-events-mapping-from": "Kontextvariabel",
     "gauges.property-map-variable": "Lägg till kontextvariabel för bindning",
     "gauges.property-head-remove-mapvariable": "Ta bort bindning",
@@ -1724,6 +1738,7 @@
     "msg.maps-location-name-exist": "Kartplatsnamnet finns redan!",
     "msg.text-name-exist": "Textnamnet finns redan!",
     "msg.texts-text-remove": "Vill du ta bort texten '{{value}}'?",
-    "msg.operation-unauthorized": "Operation obehörig!"
+    "msg.operation-unauthorized": "Operation obehörig!",
+    "gauges.property-icon-none": "Ingen ikon"
 }
 

@@ -3,6 +3,7 @@
 const http = require('http');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const apiIndex = require('../../api');
 const authApi = require('../../api/auth');
@@ -60,6 +61,61 @@ describe('Security - JWT lifecycle', () => {
         expect = chai.expect;
     });
 
+    it('returns the same signin failure response for unknown users and bad passwords', async () => {
+        const passwordHash = bcrypt.hashSync('correct-password', 4);
+        const runtime = {
+            project: {},
+            users: {
+                findOne(credentials) {
+                    if (credentials.username === 'admin') {
+                        return Promise.resolve([
+                            {
+                                username: 'admin',
+                                fullname: 'Administrator',
+                                password: passwordHash,
+                                groups: -1,
+                                info: '{}'
+                            }
+                        ]);
+                    }
+                    return Promise.resolve([]);
+                }
+            },
+            logger: {
+                error() {},
+                info() {}
+            }
+        };
+
+        authApi.init(runtime, SECRET, '1h', false, '7d');
+        const app = express();
+        app.use(express.json());
+        app.use(authApi.app());
+        const server = await listen(app);
+
+        try {
+            const headers = { 'Content-Type': 'application/json' };
+            const existingUser = await request(server, {
+                method: 'POST',
+                path: '/api/signin',
+                headers,
+                body: JSON.stringify({ username: 'admin', password: 'wrong-password' })
+            });
+            const unknownUser = await request(server, {
+                method: 'POST',
+                path: '/api/signin',
+                headers,
+                body: JSON.stringify({ username: 'user_does_not_exist_999', password: 'wrong-password' })
+            });
+
+            expect(existingUser.statusCode).to.equal(401);
+            expect(unknownUser.statusCode).to.equal(401);
+            expect(unknownUser.json).to.deep.equal(existingUser.json);
+        } finally {
+            await new Promise((resolve) => server.close(resolve));
+        }
+    });
+
     it('rejects refresh cookies for deleted users instead of reusing token groups', async () => {
         const runtime = {
             project: {},
@@ -95,6 +151,47 @@ describe('Security - JWT lifecycle', () => {
 
             expect(response.statusCode).to.equal(401);
             expect(response.json.message).to.equal('Invalid refresh token');
+        } finally {
+            await new Promise((resolve) => server.close(resolve));
+        }
+    });
+
+    it('clears Node-RED auth cookies on signout', async () => {
+        const runtime = {
+            project: {},
+            settings: {
+                https: false
+            },
+            logger: {
+                error() {},
+                info() {}
+            }
+        };
+
+        authApi.init(runtime, SECRET, '1h', false, '7d');
+        const app = express();
+        app.use(authApi.app());
+        const server = await listen(app);
+
+        try {
+            const response = await request(server, {
+                method: 'POST',
+                path: '/api/signout',
+                headers: {
+                    Cookie: 'nodered_auth=stale-token'
+                }
+            });
+
+            expect(response.statusCode).to.equal(204);
+            const setCookies = response.headers['set-cookie'] || [];
+            expect(setCookies.some(cookie =>
+                cookie.startsWith('nodered_auth=;') &&
+                cookie.includes('Path=/nodered')
+            )).to.equal(true);
+            expect(setCookies.some(cookie =>
+                cookie.startsWith('nodered_auth=;') &&
+                cookie.includes('Path=/;')
+            )).to.equal(true);
         } finally {
             await new Promise((resolve) => server.close(resolve));
         }
