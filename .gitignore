@@ -89,3 +89,9 @@ server/_appdata
 #client/package-lock.json
 
 server/_widgets
+
+# build output (jangan track artifact build, sumber konflik saat sync upstream)
+client/dist/
+server/dist/
+app/dist/
+app/out/
